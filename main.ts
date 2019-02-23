@@ -496,21 +496,28 @@ namespace motor {
 	 * Stop the dc motor.
     */
     //% weight=20
-    //% blockId=motor_motorStop block="Motor stop|%index"
+    //% blockId=motor_motorStop block="Motor stop|%index|brake|%brake"
     //% index.fieldEditor="gridpicker" index.fieldOptions.columns=2 
-    export function motorStop(index: Motors) {
-        setPwm((4 - index) * 2, 0, 0);
-        setPwm((4 - index) * 2 + 1, 0, 0);
+    //% brake.fieldEditor="toggleonoff"
+    export function motorStop(index: Motors, brake: boolean = false) {
+        if (brake) {
+            setPwm((4 - index) * 2, 0, 4095);
+            setPwm((4 - index) * 2 + 1, 0, 4095);
+        } else {
+            setPwm((4 - index) * 2, 0, 0);
+            setPwm((4 - index) * 2 + 1, 0, 0);
+        }
     }
 
     /**
 	 * Stop all motors
     */
     //% weight=10
-    //% blockId=motor_motorStopAll block="Motor Stop All"
-    export function motorStopAll(): void {
+    //% blockId=motor_motorStopAll block="Motor Stop All|brake|%brake"
+    //% brake.fieldEditor="toggleonoff"
+    export function motorStopAll(brake: boolean): void {
         for (let idx = 1; idx <= 4; idx++) {
-            motorStop(idx);
+            motorStop(idx, brake);
         }
     }
 }
